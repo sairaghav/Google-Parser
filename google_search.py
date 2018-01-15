@@ -71,6 +71,32 @@ def search_video(search_term,start_page=1,end_page=-1):
 
     return result
 
+def search_news(search_term,start_page=1,end_page=-1):
+
+    if end_page < start_page:
+        end_page = start_page
+
+    result = {}
+    
+    while start_page <= end_page:
+        response = requests.get('https://www.google.com/search?q='+search_term+'&start='+str((start_page-1)*10)+'&tbm=nws')
+
+        soup = BS(response.text,'html.parser')
+
+        for links in soup.findAll('a'):
+            if links.has_attr('href'):
+                try:
+                    link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
+                    if 'webcache' not in link and 'http' in link and not link in result:
+                        if not '...' in links.text and not links.text is u'':
+                            result[link] = links.text
+                except:
+                    pass
+
+        start_page += 1
+
+    return result
+
 
 def get_summary(search_term):
 
