@@ -71,7 +71,7 @@ def search_video(search_term,start_page=1,end_page=-1):
 
     return result
 
-def search_news(search_term,start_page=1,end_page=-1):
+def search_news(search_term='news',start_page=1,end_page=-1):
 
     if end_page < start_page:
         end_page = start_page
