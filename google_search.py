@@ -1,14 +1,17 @@
 import requests,urllib
 from bs4 import BeautifulSoup as BS
 
-def search(search_term,start_page=1,end_page=-1):
+def search(search_term,start_page=1,end_page=-1,no_of_results=-1):
+    result_mode = 0
+    if no_of_results > 0:
+        result_mode = 1
 
     if end_page < start_page:
         end_page = start_page
 
     result = []
     
-    while start_page <= end_page:
+    while start_page <= end_page or len(result) < no_of_results:
         response = requests.get('https://www.google.com/search?q='+search_term+'&start='+str((start_page-1)*10))
 
         soup = BS(response.text,'html.parser')
@@ -23,17 +26,22 @@ def search(search_term,start_page=1,end_page=-1):
                     pass
 
         start_page += 1
-
+        
+    if result_mode == 1:
+        return result[:no_of_results]
     return result
 
-def search_image(search_term,start_page=1,end_page=-1):
+def search_image(search_term,start_page=1,end_page=-1,no_of_results=-1):
+    result_mode = 0
+    if no_of_results > 0:
+        result_mode = 1
 
     if end_page < start_page:
         end_page = start_page
 
     result = []
     
-    while start_page <= end_page:
+    while start_page <= end_page or len(result) < no_of_results:
         response = requests.get('https://www.google.com/search?q='+search_term+'&start='+str((start_page-1)*10)+'&tbm=isch')
 
         soup = BS(response.text,'html.parser')
@@ -44,16 +52,21 @@ def search_image(search_term,start_page=1,end_page=-1):
 
         start_page += 1
 
+    if result_mode == 1:
+        return result[:no_of_results]
     return result
 
-def search_video(search_term,start_page=1,end_page=-1):
+def search_video(search_term,start_page=1,end_page=-1,no_of_results=-1):
+    result_mode = 0
+    if no_of_results > 0:
+        result_mode = 1
 
     if end_page < start_page:
         end_page = start_page
 
     result = []
     
-    while start_page <= end_page:
+    while start_page <= end_page or len(result) < no_of_results:
         response = requests.get('https://www.google.com/search?q='+search_term+'&start='+str((start_page-1)*10)+'&tbm=vid')
 
         soup = BS(response.text,'html.parser')
@@ -69,16 +82,21 @@ def search_video(search_term,start_page=1,end_page=-1):
 
         start_page += 1
 
+    if result_mode == 1:
+        return result[:no_of_results]
     return result
 
-def search_news(search_term='news',start_page=1,end_page=-1):
+def search_news(search_term='news',start_page=1,end_page=-1,no_of_results=-1):
+    result_mode = 0
+    if no_of_results > 0:
+        result_mode = 1
 
     if end_page < start_page:
         end_page = start_page
 
     result = {}
     
-    while start_page <= end_page:
+    while start_page <= end_page or len(result) < no_of_results:
         response = requests.get('https://www.google.com/search?q='+search_term+'&start='+str((start_page-1)*10)+'&tbm=nws')
 
         soup = BS(response.text,'html.parser')
@@ -95,6 +113,8 @@ def search_news(search_term='news',start_page=1,end_page=-1):
 
         start_page += 1
 
+    if result_mode == 1:
+        return result[:no_of_results]
     return result
 
 
