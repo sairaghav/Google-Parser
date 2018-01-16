@@ -159,12 +159,17 @@ def search_news(search_term,start_page=1,end_page=-1,no_of_results=-1):
 
 def get_summary(search_term):
 
-    response = requests.get('https://www.google.com/search?q='+search_term+'&start=0')
+    response = requests.get('https://www.google.com/search?q='+search_term)
     
     soup = BS(response.text,'html.parser')
 
-    for result in soup.findAll('span',{'class':'st'}):
-        if not '...' in result.text and not result.text is u'':
-            return result.text
+    if 'what' in search_term:
+        for result in soup.find('div',{'class':'g'}):
+            return result.find('div').text
+        
+    else:
+        for result in soup.findAll('span',{'class':'st'}):
+            if not '...' in result.text and not result.text is u'':
+                return result.text
 
     return None
