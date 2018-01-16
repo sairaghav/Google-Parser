@@ -165,7 +165,10 @@ def get_summary(search_term):
 
     if 'what' in search_term:
         for result in soup.find('div',{'class':'g'}):
-            return result.find('div').text
+            try:
+                return result.find('div').text
+            except:
+                return result.text
         
     else:
         for result in soup.findAll('span',{'class':'st'}):
