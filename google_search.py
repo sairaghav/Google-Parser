@@ -56,18 +56,18 @@ def search_image(search_term,start_page=1,end_page=-1,no_of_results=-1):
         soup = BS(response.text,'html.parser')
 
         if result_mode == 1:
-            for links in soup.findAll('a'):
+            for source_url in soup.findAll('a'):
                 if len(result) < no_of_results:
                     try:
-                        link = links.find('img')['src']
-                        result[link] = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
+                        img_url = source_url.find('img')['src']
+                        result[img_url] = urllib.unquote(source_url['href'].split('url?q=')[1].split('&sa')[0])
                     except:
                         pass
         else:
-            for links in soup.findAll('a'):
+            for source_url in soup.findAll('a'):
                 try:
-                    link = links.find('img')['src']
-                    result[link] = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
+                    img_url = source_url.find('img')['src']
+                    result[img_url] = urllib.unquote(source_url['href'].split('url?q=')[1].split('&sa')[0])
                 except:
                     pass
 
@@ -114,7 +114,7 @@ def search_video(search_term,start_page=1,end_page=-1,no_of_results=-1):
         
     return result
 
-def search_news(search_term='news',start_page=1,end_page=-1,no_of_results=-1):
+def search_news(search_term,start_page=1,end_page=-1,no_of_results=-1):
     result_mode = 0
     if no_of_results > 0:
         result_mode = 1
@@ -130,24 +130,24 @@ def search_news(search_term='news',start_page=1,end_page=-1,no_of_results=-1):
         soup = BS(response.text,'html.parser')
 
         if result_mode == 1:
-            for links in soup.findAll('a'):
-                if links.has_attr('href') and len(result) < no_of_results:
+            for headlines in soup.findAll('a'):
+                if headlines.has_attr('href') and len(result) < no_of_results:
                     try:
-                        link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
-                        if 'webcache' not in link and 'http' in link and not link in result:
-                            if not '...' in links.text and not links.text is u'':
-                                result[link] = links.text
+                        url = urllib.unquote(headlines['href'].split('url?q=')[1].split('&sa')[0])
+                        if 'webcache' not in url and 'http' in url and not url in result:
+                            if not '...' in headlines.text and not headlines.text is u'':
+                                result[url] = headlines.text
                     except:
                         pass
 
         else:
-            for links in soup.findAll('a'):
-                if links.has_attr('href'):
+            for headlines in soup.findAll('a'):
+                if headlines.has_attr('href'):
                     try:
-                        link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
-                        if 'webcache' not in link and 'http' in link and not link in result:
-                            if not '...' in links.text and not links.text is u'':
-                                result[link] = links.text
+                        url = urllib.unquote(headlines['href'].split('url?q=')[1].split('&sa')[0])
+                        if 'webcache' not in url and 'http' in url and not url in result:
+                            if not '...' in headlines.text and not headlines.text is u'':
+                                result[url] = headlines.text
                     except:
                         pass
             
