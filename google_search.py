@@ -16,19 +16,28 @@ def search(search_term,start_page=1,end_page=-1,no_of_results=-1):
 
         soup = BS(response.text,'html.parser')
 
-        for links in soup.findAll('a'):
-            if links.has_attr('href'):
-                try:
-                    link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
-                    if 'webcache' not in link and 'http' in link and not link in result:
-                        result.append(link)
-                except:
-                    pass
+        if result_mode == 1:
+            for links in soup.findAll('a'):
+                if links.has_attr('href') and len(result) < no_of_results:
+                    try:
+                        link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
+                        if 'webcache' not in link and 'http' in link and not link in result:
+                            result.append(link)
+                    except:
+                        pass
+
+        else:
+            for links in soup.findAll('a'):
+                if links.has_attr('href'):
+                    try:
+                        link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
+                        if 'webcache' not in link and 'http' in link and not link in result:
+                            result.append(link)
+                    except:
+                        pass
 
         start_page += 1
         
-    if result_mode == 1:
-        return result[:no_of_results]
     return result
 
 def search_image(search_term,start_page=1,end_page=-1,no_of_results=-1):
@@ -39,21 +48,31 @@ def search_image(search_term,start_page=1,end_page=-1,no_of_results=-1):
     if end_page < start_page:
         end_page = start_page
 
-    result = []
+    result = {}
     
     while start_page <= end_page or len(result) < no_of_results:
         response = requests.get('https://www.google.com/search?q='+search_term+'&start='+str((start_page-1)*10)+'&tbm=isch')
 
         soup = BS(response.text,'html.parser')
 
-        for links in soup.findAll('img'):
-            if links.has_attr('src'):
-                result.append(links['src'])
+        if result_mode == 1:
+            for links in soup.findAll('a'):
+                if len(result) < no_of_results:
+                    try:
+                        link = links.find('img')['src']
+                        result[link] = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
+                    except:
+                        pass
+        else:
+            for links in soup.findAll('a'):
+                try:
+                    link = links.find('img')['src']
+                    result[link] = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
+                except:
+                    pass
 
         start_page += 1
-
-    if result_mode == 1:
-        return result[:no_of_results]
+        
     return result
 
 def search_video(search_term,start_page=1,end_page=-1,no_of_results=-1):
@@ -71,19 +90,28 @@ def search_video(search_term,start_page=1,end_page=-1,no_of_results=-1):
 
         soup = BS(response.text,'html.parser')
 
-        for links in soup.findAll('a'):
-            if links.has_attr('href'):
-                try:
-                    link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
-                    if 'webcache' not in link and 'http' in link and not link in result:
-                        result.append(link)
-                except:
-                    pass
+        if result_mode == 1:
+            for links in soup.findAll('a'):
+                if links.has_attr('href') and len(result) < no_of_results:
+                    try:
+                        link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
+                        if 'webcache' not in link and 'http' in link and not link in result:
+                            result.append(link)
+                    except:
+                        pass
+
+        else:
+            for links in soup.findAll('a'):
+                if links.has_attr('href'):
+                    try:
+                        link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
+                        if 'webcache' not in link and 'http' in link and not link in result:
+                            result.append(link)
+                    except:
+                        pass
 
         start_page += 1
-
-    if result_mode == 1:
-        return result[:no_of_results]
+        
     return result
 
 def search_news(search_term='news',start_page=1,end_page=-1,no_of_results=-1):
@@ -101,20 +129,31 @@ def search_news(search_term='news',start_page=1,end_page=-1,no_of_results=-1):
 
         soup = BS(response.text,'html.parser')
 
-        for links in soup.findAll('a'):
-            if links.has_attr('href'):
-                try:
-                    link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
-                    if 'webcache' not in link and 'http' in link and not link in result:
-                        if not '...' in links.text and not links.text is u'':
-                            result[link] = links.text
-                except:
-                    pass
+        if result_mode == 1:
+            for links in soup.findAll('a'):
+                if links.has_attr('href') and len(result) < no_of_results:
+                    try:
+                        link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
+                        if 'webcache' not in link and 'http' in link and not link in result:
+                            if not '...' in links.text and not links.text is u'':
+                                result[link] = links.text
+                    except:
+                        pass
+
+        else:
+            for links in soup.findAll('a'):
+                if links.has_attr('href'):
+                    try:
+                        link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
+                        if 'webcache' not in link and 'http' in link and not link in result:
+                            if not '...' in links.text and not links.text is u'':
+                                result[link] = links.text
+                    except:
+                        pass
+            
 
         start_page += 1
 
-    if result_mode == 1:
-        return result[:no_of_results]
     return result
 
 
