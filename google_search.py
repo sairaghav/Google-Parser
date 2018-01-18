@@ -19,98 +19,18 @@ def get_summary(search_term):
 
     return None
 
-def get_urls(soup,start_page,end_page,no_of_results):
-    result=[]
-    
-    result_mode = 0
-    if no_of_results > 0:
-        result_mode = 1
-        
-    while start_page <= end_page or len(result) < no_of_results:
-        for links in soup.findAll('a'):
-            if result_mode == 1 and len(result) < no_of_results:
-                try:
-                    link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
-                    if 'webcache' not in link and 'http' in link and not link in result:
-                        result.append(link)
-                except:
-                    pass
-            if result_mode == 0:
-                try:
-                    link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
-                    if 'webcache' not in link and 'http' in link and not link in result:
-                        result.append(link)
-                except:
-                    pass
-        start_page += 1
-
-    return result
-
-def get_img_urls(soup,start_page,end_page,no_of_results):
-    result={}
-    
-    result_mode = 0
-    if no_of_results > 0:
-        result_mode = 1
-        
-    while start_page <= end_page or len(result) < no_of_results:
-        for links in soup.findAll('a'):
-            if result_mode == 1 and len(result) < no_of_results:
-                try:
-                    link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
-                    result[links.find('img')['src']] = link
-                except:
-                    pass
-            if result_mode == 0:
-                try:
-                    link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
-                    result[links.find('img')['src']] = link
-                except:
-                    pass
-        start_page += 1
-
-    return result
-
-def get_news_urls(soup,start_page,end_page,no_of_results):
-    result={}
-    
-    result_mode = 0
-    if no_of_results > 0:
-        result_mode = 1
-        
-    while start_page <= end_page or len(result) < no_of_results:
-        for links in soup.findAll('a'):
-            if result_mode == 1 and len(result) < no_of_results:
-                try:
-                    link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
-                    if 'webcache' not in link and 'http' in link and not link in result:
-                       if not '...' in links.text and not links.text is u'':
-                                result[link] = links.text 
-                except:
-                    pass
-            if result_mode == 0:
-                try:
-                    link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
-                    if 'webcache' not in link and 'http' in link and not link in result:
-                        if not '...' in links.text and not links.text is u'':
-                                result[link] = links.text
-                except:
-                    pass
-        start_page += 1
-
-    return result
-
 def search(search_term,category='',start_page=1,end_page=-1,no_of_results=-1):
+    result_mode = 0
+    if no_of_results > 0:
+        result_mode = 1
     if end_page < start_page:
         end_page = start_page
 
     cat = ''
     if 'image' in category:
         cat = '&tbm=isch'
-
     if 'video' in category:
         cat = '&tbm=vid'
-
     if 'news' in category:
         cat = '&tbm=nws'
 
@@ -118,15 +38,36 @@ def search(search_term,category='',start_page=1,end_page=-1,no_of_results=-1):
 
     response = requests.get(query)
     soup = BS(response.text,'html.parser')
-    
-    if '' in category or 'video' in category:
-        res = []
-        res = get_urls(soup,start_page,end_page,no_of_results)
-    if 'image' in category:
-        res = {}
-        res = get_img_urls(soup,start_page,end_page,no_of_results)
-    if 'news' in category:
-        res = {}
-        res = get_news_urls(soup,start_page,end_page,no_of_results)
 
-    return res
+    result={}
+        
+    while start_page <= end_page or len(result) < no_of_results:
+        for links in soup.findAll('a'):
+            if 'image' in category:
+                try:
+                    key = links.find('img')['src']
+                except:
+                    pass
+            else:
+                key = links.text
+
+            if result_mode == 1:
+                if len(result) < no_of_results:
+                    try:
+                        link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
+                        if 'webcache' not in link and 'http' in link:
+                            if not '...' in key and not key is u'':
+                                result[key] = link
+                    except:
+                        pass
+            else:
+                try:
+                    link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
+                    if 'webcache' not in link and 'http' in link:
+                        if not '...' in key and not key is u'':
+                            result[key] = link
+                except:
+                    pass
+        start_page += 1
+
+    return result
