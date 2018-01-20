@@ -33,7 +33,7 @@ def search(search_term,category='',start_page=1,end_page=-1,no_of_results=-1):
 
     result={}
         
-    while start_page <= end_page or len(result) < no_of_results:
+    while (no_of_results < 0 and start_page <= end_page) or (no_of_results > 0 and len(result) < no_of_results):
         query = 'https://www.google.com/search?q='+search_term+'&start='+str((start_page-1)*10)+cat
 
         response = requests.get(query)
