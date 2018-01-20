@@ -20,9 +20,6 @@ def get_summary(search_term):
     return None
 
 def search(search_term,category='',start_page=1,end_page=-1,no_of_results=-1):
-    result_mode = 0
-    if no_of_results > 0:
-        result_mode = 1
     if end_page < start_page:
         end_page = start_page
 
@@ -34,14 +31,14 @@ def search(search_term,category='',start_page=1,end_page=-1,no_of_results=-1):
     if 'news' in category:
         cat = '&tbm=nws'
 
-    query = 'https://www.google.com/search?q='+search_term+'&start='+str((start_page-1)*10)+cat
-
-    response = requests.get(query)
-    soup = BS(response.text,'html.parser')
-
     result={}
         
     while start_page <= end_page or len(result) < no_of_results:
+        query = 'https://www.google.com/search?q='+search_term+'&start='+str((start_page-1)*10)+cat
+
+        response = requests.get(query)
+        soup = BS(response.text,'html.parser')
+
         for links in soup.findAll('a'):
             if 'image' in category:
                 try:
@@ -51,16 +48,7 @@ def search(search_term,category='',start_page=1,end_page=-1,no_of_results=-1):
             else:
                 key = links.text
 
-            if result_mode == 1:
-                if len(result) < no_of_results:
-                    try:
-                        link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
-                        if 'webcache' not in link and 'http' in link:
-                            if not '...' in key and not key is u'':
-                                result[key] = link
-                    except:
-                        pass
-            else:
+            if (no_of_results > 0 and len(result) < no_of_results) or (no_of_results < 0):
                 try:
                     link = urllib.unquote(links['href'].split('url?q=')[1].split('&sa')[0])
                     if 'webcache' not in link and 'http' in link:
@@ -68,6 +56,7 @@ def search(search_term,category='',start_page=1,end_page=-1,no_of_results=-1):
                             result[key] = link
                 except:
                     pass
+
         start_page += 1
 
     return result
