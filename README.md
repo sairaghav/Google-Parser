@@ -41,9 +41,7 @@ Get results from Google news on a specific topic. Providing no argument will giv
 **Example:**
 _search_news('obamacare')_
 
-The results will be returned as a dictionary where the key will be the headlines and the value will be URL of the result.
-
-To get only the headlines, use:
+The results will be returned as a dictionary where the key will be the headlines and the value will be URL of the result. To get only the headlines, use:
 _search_news(topic).keys()_
 
 ## Google Summary:
