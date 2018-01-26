@@ -1,7 +1,7 @@
 # Google-Parser
 
 This utility can be used to get search results from Google. The following information can be obtained using this tool:
-## Google Search results:
+### Google Search results:
 Get results for Google Web search, Image search and Video search
 
 **Usage:** 
@@ -31,7 +31,7 @@ The number of results returned can be controlled using the parameters **start_pa
 
 Note that _no_of_results_ holds precedence over other parameters. For instance, _search('god',start_page=1,end_page=2,no_of_results=25)_ will return 25 results even if it goes beyond the second page.
 
-## News results:
+### News results:
 Get results from Google news on a specific topic. Providing no argument will give you results for the breaking news.
 
 **Usage:**
@@ -44,7 +44,7 @@ _search_news('obamacare')_
 The results will be returned as a dictionary where the key will be the headlines and the value will be URL of the result. To get only the headlines, use:
 _search_news(topic).keys()_
 
-## Google Summary:
+### Google Summary:
 Get the summary of information provided by Google on any topic.
 
 **Usage:**
