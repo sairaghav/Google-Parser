@@ -1,6 +1,6 @@
 # Google-Parser
 
-This utility can be used to get search results from Google. The following information can be obtained using this tool:
+This utility can be used to get search results from Google.
 ### Google Search results:
 Get results for Google Web search, Image search and Video search
 
