@@ -88,5 +88,3 @@ def search(search_term,category='',start_page=1,end_page=-1,no_of_results=-1):
         start_page += 1
 
     return result
-
-print get_summary('what is the purpose of life')
